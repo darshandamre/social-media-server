@@ -9,8 +9,8 @@ export class Post {
   @Field()
   content: string;
 
-  @Field(type => User)
-  author: User;
+  // @Field(type => User)
+  // author: User;
 
   @Field(type => ID)
   authorId: number;

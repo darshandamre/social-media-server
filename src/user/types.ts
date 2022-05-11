@@ -21,8 +21,8 @@ class User {
   // @Field()
   // password: string;
 
-  @Field(type => [Post])
-  posts: Post[];
+  // @Field(type => [Post])
+  // posts: Post[];
 
   // followers : Follow[]
   // following : Follow[]

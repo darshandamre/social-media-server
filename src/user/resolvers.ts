@@ -1,15 +1,30 @@
 import { Prisma } from "@prisma/client";
 import argon2 from "argon2";
-import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
+import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { MyContext } from "../context";
-import { UserRegisterInput, UserResponse } from "./types";
+import { User, UserRegisterInput, UserResponse } from "./types";
 import { validateRegister } from "./validate";
 import jwt from "jsonwebtoken";
 import { COOKIE_NAME, JWT_SECRET } from "../constants";
 
 @Resolver()
 export class UserResolver {
-  @Mutation(returns => UserResponse)
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req, prisma }: MyContext): Promise<User | null> {
+    const token = req.cookies[COOKIE_NAME];
+    if (!token) return null;
+
+    const { id } = jwt.verify(token, JWT_SECRET) as { id: number };
+
+    return await prisma.user.findUnique({
+      where: { id },
+      include: {
+        posts: true
+      }
+    });
+  }
+
+  @Mutation(() => UserResponse)
   async register(
     @Arg("input") input: UserRegisterInput,
     @Ctx() { prisma, res }: MyContext
@@ -29,14 +44,7 @@ export class UserResolver {
         }
       });
 
-      const token = jwt.sign(
-        {
-          id: user.id,
-          email: user.email,
-          username: user.username
-        },
-        JWT_SECRET
-      );
+      const token = jwt.sign({ id: user.id }, JWT_SECRET);
 
       res.cookie(COOKIE_NAME, token, {
         httpOnly: true,
@@ -45,12 +53,7 @@ export class UserResolver {
         secure: true
       });
 
-      return {
-        user: {
-          ...user,
-          posts: []
-        }
-      };
+      return { user };
     } catch (err) {
       if (
         err instanceof Prisma.PrismaClientKnownRequestError &&
