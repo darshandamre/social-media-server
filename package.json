@@ -11,7 +11,10 @@
     "@prisma/client": "^3.13.0",
     "apollo-server-core": "^3.7.0",
     "apollo-server-express": "^3.7.0",
+    "class-validator": "^0.13.2",
     "express": "^4.18.1",
-    "graphql": "^16.5.0"
+    "graphql": "^16.5.0",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^1.1.1"
   }
 }
