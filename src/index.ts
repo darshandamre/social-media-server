@@ -4,7 +4,7 @@ import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import express from "express";
 import http from "http";
 import { buildSchema } from "type-graphql";
-import { HelloResolver } from "./resolvers/hello";
+import { HelloResolver } from "./hello/resolver";
 
 const main = async () => {
   const app = express();
