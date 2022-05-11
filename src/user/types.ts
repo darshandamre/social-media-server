@@ -1,8 +1,8 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, InputType, ObjectType } from "type-graphql";
 import { Post } from "../post/types";
 
 @ObjectType()
-export class User {
+class User {
   @Field(type => ID)
   id: number;
 
@@ -36,3 +36,59 @@ export class User {
   @Field(type => String)
   updatedAt: Date;
 }
+
+@InputType()
+class UserRegisterInput {
+  @Field()
+  username: string;
+
+  @Field()
+  email: string;
+
+  @Field()
+  firstName: string;
+
+  @Field()
+  lastName: string;
+
+  @Field()
+  password: string;
+}
+
+@ObjectType()
+export class UserRegister {
+  @Field()
+  username: string;
+
+  @Field()
+  email: string;
+
+  @Field()
+  firstName: string;
+
+  @Field()
+  lastName: string;
+
+  @Field()
+  password: string;
+}
+
+@ObjectType()
+class FieldError {
+  @Field()
+  field: string;
+
+  @Field()
+  message: string;
+}
+
+@ObjectType()
+class UserResponse {
+  @Field(type => [FieldError], { nullable: true })
+  errors?: FieldError[];
+
+  @Field(type => User, { nullable: true })
+  user?: User;
+}
+
+export { User, UserRegisterInput, FieldError, UserResponse };

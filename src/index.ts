@@ -5,15 +5,18 @@ import express from "express";
 import http from "http";
 import { buildSchema } from "type-graphql";
 import { HelloResolver } from "./hello/resolver";
+import { UserResolver } from "./user/resolvers";
+import { context } from "./context";
 
 const main = async () => {
   const app = express();
   const httpServer = http.createServer(app);
   const schema = await buildSchema({
-    resolvers: [HelloResolver]
+    resolvers: [HelloResolver, UserResolver]
   });
   const server = new ApolloServer({
     schema,
+    context,
     csrfPrevention: true,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
   });
