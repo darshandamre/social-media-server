@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { UserRegisterInput } from "./types";
+// import { UserLoginInput, UserRegisterInput } from "./types";
 
 const registerSchema = yup.object().shape({
   username: yup
@@ -13,7 +13,7 @@ const registerSchema = yup.object().shape({
   password: yup.string().required().min(4, "password too short")
 });
 
-export const validateRegister = async (value: UserRegisterInput) => {
+const validateRegister = async (value: any) => {
   try {
     await registerSchema.validate(value, { abortEarly: false });
     return null;
@@ -28,3 +28,26 @@ export const validateRegister = async (value: UserRegisterInput) => {
     throw err;
   }
 };
+
+const loginSchema = yup.object().shape({
+  email: yup.string().required().email(),
+  password: yup.string().required()
+});
+
+const validateLogin = async (value: any) => {
+  try {
+    await loginSchema.validate(value, { abortEarly: false });
+    return null;
+  } catch (err) {
+    if (err instanceof yup.ValidationError) {
+      return err.inner.map(e => ({
+        field: e.path ?? "none",
+        message: e.errors[0]
+      }));
+    }
+
+    throw err;
+  }
+};
+
+export { validateLogin, validateRegister };

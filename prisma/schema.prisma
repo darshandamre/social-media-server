@@ -15,8 +15,8 @@ model User {
   id        Int        @id @default(autoincrement())
   username  String     @unique @db.VarChar(50)
   email     String     @unique
-  firstName String     @db.VarChar(50)
-  lastName  String     @db.VarChar(50)
+  firstName String?    @db.VarChar(50)
+  lastName  String?    @db.VarChar(50)
   password  String
   posts     Post[]
   followers Follow[]   @relation("followersOnUser")

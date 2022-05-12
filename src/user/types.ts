@@ -1,5 +1,4 @@
 import { Field, ID, InputType, ObjectType } from "type-graphql";
-import { Post } from "../post/types";
 
 @ObjectType()
 class User {
@@ -12,11 +11,11 @@ class User {
   @Field()
   email: string;
 
-  @Field()
-  firstName: string;
+  @Field(type => String, { nullable: true })
+  firstName: string | null;
 
-  @Field()
-  lastName: string;
+  @Field(type => String, { nullable: true })
+  lastName: string | null;
 
   // @Field()
   // password: string;
@@ -45,29 +44,20 @@ class UserRegisterInput {
   @Field()
   email: string;
 
-  @Field()
-  firstName: string;
+  @Field({ nullable: true })
+  firstName?: string;
 
-  @Field()
-  lastName: string;
+  @Field({ nullable: true })
+  lastName?: string;
 
   @Field()
   password: string;
 }
 
-@ObjectType()
-export class UserRegister {
-  @Field()
-  username: string;
-
+@InputType()
+class UserLoginInput {
   @Field()
   email: string;
-
-  @Field()
-  firstName: string;
-
-  @Field()
-  lastName: string;
 
   @Field()
   password: string;
@@ -91,4 +81,4 @@ class UserResponse {
   user?: User;
 }
 
-export { User, UserRegisterInput, FieldError, UserResponse };
+export { User, FieldError, UserResponse, UserLoginInput, UserRegisterInput };

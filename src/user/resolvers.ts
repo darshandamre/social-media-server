@@ -2,10 +2,10 @@ import { Prisma } from "@prisma/client";
 import argon2 from "argon2";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import { MyContext } from "../context";
-import { User, UserRegisterInput, UserResponse } from "./types";
-import { validateRegister } from "./validate";
+import { User, UserLoginInput, UserRegisterInput, UserResponse } from "./types";
+import { validateLogin, validateRegister } from "./validate";
 import jwt from "jsonwebtoken";
-import { COOKIE_NAME, JWT_SECRET } from "../constants";
+import { COOKIE_NAME, COOKIE_OPTIONS, JWT_SECRET } from "../constants";
 
 @Resolver()
 export class UserResolver {
@@ -16,12 +16,7 @@ export class UserResolver {
 
     const { id } = jwt.verify(token, JWT_SECRET) as { id: number };
 
-    return await prisma.user.findUnique({
-      where: { id },
-      include: {
-        posts: true
-      }
-    });
+    return await prisma.user.findUnique({ where: { id } });
   }
 
   @Mutation(() => UserResponse)
@@ -46,12 +41,7 @@ export class UserResolver {
 
       const token = jwt.sign({ id: user.id }, JWT_SECRET);
 
-      res.cookie(COOKIE_NAME, token, {
-        httpOnly: true,
-        sameSite: "none", // change this after hosting
-        maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-        secure: true
-      });
+      res.cookie(COOKIE_NAME, token, COOKIE_OPTIONS);
 
       return { user };
     } catch (err) {
@@ -75,5 +65,50 @@ export class UserResolver {
 
       throw err;
     }
+  }
+
+  @Mutation(() => UserResponse)
+  async login(
+    @Arg("input") input: UserLoginInput,
+    @Ctx() { prisma, res }: MyContext
+  ): Promise<UserResponse> {
+    const errors = await validateLogin(input);
+    if (errors) {
+      return { errors };
+    }
+    const user = await prisma.user.findUnique({
+      where: {
+        email: input.email
+      }
+    });
+
+    if (!user) {
+      return {
+        errors: [
+          {
+            field: "email",
+            message: "user does not exists"
+          }
+        ]
+      };
+    }
+
+    const isValid = await argon2.verify(user.password, input.password);
+
+    if (!isValid) {
+      return {
+        errors: [
+          {
+            field: "password",
+            message: "incorrect password"
+          }
+        ]
+      };
+    }
+
+    const token = jwt.sign({ id: user.id }, JWT_SECRET);
+    res.cookie(COOKIE_NAME, token, COOKIE_OPTIONS);
+
+    return { user };
   }
 }
