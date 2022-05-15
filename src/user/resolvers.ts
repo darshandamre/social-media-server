@@ -111,4 +111,13 @@ export class UserResolver {
 
     return { user };
   }
+
+  @Mutation(() => Boolean)
+  logout(@Ctx() { res }: MyContext): Boolean {
+    res.clearCookie(COOKIE_NAME, {
+      ...COOKIE_OPTIONS,
+      maxAge: 0
+    });
+    return true;
+  }
 }
