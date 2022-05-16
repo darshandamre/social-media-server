@@ -2,7 +2,8 @@
   "name": "server",
   "packageManager": "yarn@3.2.0",
   "scripts": {
-    "dev": "nodemon ./dist/index.js"
+    "dev": "nodemon ./dist/index.js",
+    "build": "yarn tsc && node ./dist/index.js"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.3",
