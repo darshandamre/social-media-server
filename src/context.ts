@@ -6,7 +6,9 @@ const prisma = new PrismaClient({
 });
 
 export type MyContext = {
-  req: Request;
+  req: Request & {
+    userId?: number;
+  };
   res: Response;
   prisma: PrismaClient;
 };
