@@ -9,6 +9,7 @@ import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import { context } from "./context";
 import { HelloResolver } from "./hello/resolver";
 import { UserResolver } from "./user/resolvers";
+import { AuthResolver } from "./auth/resolvers";
 
 const main = async () => {
   const app = express();
@@ -28,7 +29,7 @@ const main = async () => {
 
   const httpServer = http.createServer(app);
   const schema = await buildSchema({
-    resolvers: [HelloResolver, UserResolver]
+    resolvers: [HelloResolver, AuthResolver, UserResolver]
   });
 
   const server = new ApolloServer({
