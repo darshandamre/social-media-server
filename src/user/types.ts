@@ -1,8 +1,9 @@
 import { Field, ID, InputType, ObjectType } from "type-graphql";
+import { Post } from "../post/types";
 
 @ObjectType()
 class User {
-  @Field(type => ID)
+  @Field(() => ID)
   id: number;
 
   @Field()
@@ -11,17 +12,14 @@ class User {
   @Field()
   email: string;
 
-  @Field(type => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   firstName: string | null;
 
-  @Field(type => String, { nullable: true })
+  @Field(() => String, { nullable: true })
   lastName: string | null;
 
-  // @Field()
-  // password: string;
-
-  // @Field(type => [Post])
-  // posts: Post[];
+  @Field(() => [Post], { nullable: true })
+  posts?: Post[];
 
   // followers : Follow[]
   // following : Follow[]
@@ -29,10 +27,10 @@ class User {
   // comments  : Comment[]
   // bookmarks : Bookmark[]
 
-  @Field(type => String)
+  @Field(() => String)
   createdAt: Date;
 
-  @Field(type => String)
+  @Field(() => String)
   updatedAt: Date;
 }
 
@@ -74,10 +72,10 @@ class FieldError {
 
 @ObjectType()
 class UserResponse {
-  @Field(type => [FieldError], { nullable: true })
+  @Field(() => [FieldError], { nullable: true })
   errors?: FieldError[];
 
-  @Field(type => User, { nullable: true })
+  @Field(() => User, { nullable: true })
   user?: User;
 }
 

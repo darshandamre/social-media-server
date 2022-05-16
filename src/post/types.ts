@@ -3,25 +3,25 @@ import { User } from "../user/types";
 
 @ObjectType()
 export class Post {
-  @Field(type => ID)
+  @Field(() => ID)
   id: number;
 
   @Field()
   content: string;
 
-  // @Field(type => User)
-  // author: User;
+  @Field(() => User, { nullable: true })
+  author?: User;
 
-  @Field(type => ID)
+  @Field(() => ID)
   authorId: number;
 
   // comments     Comment[]
   // likedBy      Like[]
   // bookmarkedBy Bookmark[]
 
-  @Field(type => String)
+  @Field(() => String)
   createdAt: Date;
 
-  @Field(type => String)
+  @Field(() => String)
   updatedAt: Date;
 }
