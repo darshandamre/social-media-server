@@ -1,10 +1,33 @@
-import { Arg, Ctx, Int, Mutation, Resolver, UseMiddleware } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Int,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware
+} from "type-graphql";
 import { isAuth } from "../auth/middlewares";
 import { MyContext } from "../context";
 import { Post } from "./types";
 
 @Resolver(Post)
 export class PostResolver {
+  @Query(() => Post, { nullable: true })
+  async post(
+    @Arg("id", () => Int) id: number,
+    @Ctx() { prisma }: MyContext
+  ): Promise<Post | null> {
+    return prisma.post.findUnique({
+      where: { id }
+    });
+  }
+
+  @Query(() => [Post])
+  async posts(@Ctx() { prisma }: MyContext): Promise<Post[]> {
+    return prisma.post.findMany();
+  }
+
   @Mutation(() => Post)
   @UseMiddleware(isAuth)
   async createPost(
