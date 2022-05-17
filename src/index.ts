@@ -8,8 +8,8 @@ import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
 import { context } from "./context";
 import { HelloResolver } from "./hello/resolver";
-import { UserResolver } from "./user/resolvers";
-import { AuthResolver } from "./auth/resolvers";
+import { UserResolver } from "./user/resolver";
+import { AuthResolver } from "./auth/resolver";
 
 const main = async () => {
   const app = express();
