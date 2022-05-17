@@ -9,12 +9,12 @@ export class PostResolver {
   @UseMiddleware(isAuth)
   async createPost(
     @Arg("content") content: string,
-    @Ctx() { req, prisma }: MyContext
+    @Ctx() { userId, prisma }: MyContext
   ): Promise<Post> {
     return prisma.post.create({
       data: {
         content,
-        authorId: req.userId!
+        authorId: userId!
       }
     });
   }
@@ -23,12 +23,12 @@ export class PostResolver {
   @UseMiddleware(isAuth)
   async deletePost(
     @Arg("id", () => Int) id: number,
-    @Ctx() { prisma, req }: MyContext
+    @Ctx() { prisma, userId }: MyContext
   ): Promise<boolean> {
     const { count } = await prisma.post.deleteMany({
       where: {
         id,
-        authorId: req.userId
+        authorId: userId
       }
     });
 
@@ -40,11 +40,11 @@ export class PostResolver {
   async editPost(
     @Arg("id", () => Int) id: number,
     @Arg("content") content: string,
-    @Ctx() { prisma, req }: MyContext
+    @Ctx() { prisma, userId }: MyContext
   ): Promise<Post | null> {
     const [{ count }, updatedPost] = await prisma.$transaction([
       prisma.post.updateMany({
-        where: { id, authorId: req.userId },
+        where: { id, authorId: userId },
         data: { content }
       }),
       prisma.post.findUnique({ where: { id } })
@@ -53,5 +53,29 @@ export class PostResolver {
     if (count === 0) return null;
 
     return updatedPost;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async like(
+    @Arg("id", () => Int) id: number,
+    @Ctx() { prisma, userId }: MyContext
+  ): Promise<boolean> {
+    await prisma.like.create({
+      data: { postId: id, userId: userId! }
+    });
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async dislike(
+    @Arg("id", () => Int) id: number,
+    @Ctx() { prisma, userId }: MyContext
+  ): Promise<boolean> {
+    await prisma.like.delete({
+      where: { postId_userId: { postId: id, userId: userId! } }
+    });
+    return true;
   }
 }
