@@ -10,6 +10,7 @@ import { context } from "./context";
 import { HelloResolver } from "./hello/resolver";
 import { UserResolver } from "./user/resolver";
 import { AuthResolver } from "./auth/resolver";
+import { PostResolver } from "./post/resolver";
 
 const main = async () => {
   const app = express();
@@ -29,7 +30,7 @@ const main = async () => {
 
   const httpServer = http.createServer(app);
   const schema = await buildSchema({
-    resolvers: [HelloResolver, AuthResolver, UserResolver]
+    resolvers: [HelloResolver, AuthResolver, UserResolver, PostResolver]
   });
 
   const server = new ApolloServer({
