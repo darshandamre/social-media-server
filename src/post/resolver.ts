@@ -78,4 +78,28 @@ export class PostResolver {
     });
     return true;
   }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async addBookmark(
+    @Arg("id", () => Int) id: number,
+    @Ctx() { prisma, userId }: MyContext
+  ): Promise<boolean> {
+    await prisma.bookmark.create({
+      data: { postId: id, userId: userId! }
+    });
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async removeBookmark(
+    @Arg("id", () => Int) id: number,
+    @Ctx() { prisma, userId }: MyContext
+  ): Promise<boolean> {
+    await prisma.bookmark.delete({
+      where: { userId_postId: { postId: id, userId: userId! } }
+    });
+    return true;
+  }
 }
