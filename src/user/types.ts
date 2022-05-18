@@ -24,11 +24,17 @@ class User {
   @Field(() => [Post], { nullable: true })
   posts?: Post[];
 
-  // followers : Follow[]
-  // following : Follow[]
-  // likes     : Like[]
-  // comments  : Comment[]
-  // bookmarks : Bookmark[]
+  @Field(() => [User], { nullable: true })
+  followers?: User[];
+
+  @Field(() => [User], { nullable: true })
+  following?: User[];
+
+  @Field(() => [Post], { nullable: true })
+  likes?: Post[];
+
+  @Field(() => [Post], { nullable: true })
+  bookmarks?: Post[];
 
   @Field(() => String)
   createdAt: Date;

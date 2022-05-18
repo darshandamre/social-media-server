@@ -15,9 +15,10 @@ export class Post {
   @Field(() => ID)
   authorId: number;
 
+  @Field(() => [User], { nullable: true })
+  likedBy?: User[];
+
   // comments     Comment[]
-  // likedBy      Like[]
-  // bookmarkedBy Bookmark[]
 
   @Field(() => String)
   createdAt: Date;
