@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import {
   Arg,
   Ctx,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -14,7 +15,7 @@ import { MyContext } from "../context";
 import { EditUserInput, User } from "./types";
 import { validateUserEdit } from "./validate";
 
-@Resolver()
+@Resolver(User)
 export class UserResolver {
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req, prisma }: MyContext): Promise<User | null> {
@@ -44,5 +45,36 @@ export class UserResolver {
     });
 
     return { user: updatedUser };
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async follow(
+    @Arg("followId", () => Int) followId: number,
+    @Ctx() { userId, prisma }: MyContext
+  ): Promise<boolean> {
+    await prisma.follow.create({
+      data: { followerId: userId!, userId: followId }
+    });
+
+    return true;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(isAuth)
+  async unfollow(
+    @Arg("unfollowId", () => Int) unfollowId: number,
+    @Ctx() { prisma, userId }: MyContext
+  ): Promise<boolean> {
+    await prisma.follow.delete({
+      where: {
+        userId_followerId: {
+          followerId: userId!,
+          userId: unfollowId
+        }
+      }
+    });
+
+    return true;
   }
 }
