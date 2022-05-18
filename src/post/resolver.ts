@@ -125,4 +125,27 @@ export class PostResolver {
     });
     return true;
   }
+
+  @Query(() => [Post])
+  @UseMiddleware(isAuth)
+  async userFeed(@Ctx() { prisma, userId }: MyContext): Promise<Post[]> {
+    const follows = await prisma.follow.findMany({
+      where: { followerId: userId },
+      include: {
+        user: {
+          include: {
+            posts: true
+          }
+        }
+      }
+    });
+
+    return follows.reduce<Post[]>(
+      (allPosts, { user: { posts, ...user } }) => [
+        ...allPosts,
+        ...posts.map(post => ({ ...post, author: user }))
+      ],
+      []
+    );
+  }
 }
