@@ -12,7 +12,7 @@ datasource db {
 }
 
 model User {
-  id            Int        @id @default(autoincrement())
+  id            String     @id @default(uuid()) @db.Uuid
   username      String     @unique @db.VarChar(15)
   email         String     @unique
   name          String?    @db.VarChar(50)
@@ -33,10 +33,10 @@ model User {
 }
 
 model Post {
-  id           Int        @id @default(autoincrement())
+  id           String     @id @default(uuid()) @db.Uuid
   content      String     @db.VarChar(500)
   author       User       @relation(fields: [authorId], references: [id])
-  authorId     Int
+  authorId     String     @db.Uuid
   comments     Comment[]
   likedBy      Like[]
   bookmarkedBy Bookmark[]
@@ -47,32 +47,32 @@ model Post {
 }
 
 model Follow {
-  user       User @relation("followersOnUser", fields: [userId], references: [id], map: "user_is_following_fk")
-  userId     Int
-  follower   User @relation("followingOnUser", fields: [userId], references: [id], map: "follower_of_user_fk")
-  followerId Int
+  user       User   @relation("followersOnUser", fields: [userId], references: [id], map: "user_is_following_fk")
+  userId     String @db.Uuid
+  follower   User   @relation("followingOnUser", fields: [userId], references: [id], map: "follower_of_user_fk")
+  followerId String @db.Uuid
 
   @@id([userId, followerId])
   @@index([followerId])
 }
 
 model Like {
-  post   Post @relation(fields: [postId], references: [id])
-  postId Int
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
 
   @@id([postId, userId])
   @@index([userId])
 }
 
 model Comment {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid()) @db.Uuid
   content   String   @db.VarChar(500)
   post      Post     @relation(fields: [postId], references: [id])
-  postId    Int
+  postId    String   @db.Uuid
   author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+  authorId  String   @db.Uuid
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -80,10 +80,10 @@ model Comment {
 }
 
 model Bookmark {
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-  post   Post @relation(fields: [postId], references: [id])
-  postId Int
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.Uuid
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @db.Uuid
 
   @@id([userId, postId])
   @@index([postId])

@@ -1,6 +1,6 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" SERIAL NOT NULL,
+    "id" UUID NOT NULL,
     "username" VARCHAR(15) NOT NULL,
     "email" TEXT NOT NULL,
     "name" VARCHAR(50),
@@ -15,9 +15,9 @@ CREATE TABLE "User" (
 
 -- CreateTable
 CREATE TABLE "Post" (
-    "id" SERIAL NOT NULL,
+    "id" UUID NOT NULL,
     "content" VARCHAR(500) NOT NULL,
-    "authorId" INTEGER NOT NULL,
+    "authorId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -26,26 +26,26 @@ CREATE TABLE "Post" (
 
 -- CreateTable
 CREATE TABLE "Follow" (
-    "userId" INTEGER NOT NULL,
-    "followerId" INTEGER NOT NULL,
+    "userId" UUID NOT NULL,
+    "followerId" UUID NOT NULL,
 
     CONSTRAINT "Follow_pkey" PRIMARY KEY ("userId","followerId")
 );
 
 -- CreateTable
 CREATE TABLE "Like" (
-    "postId" INTEGER NOT NULL,
-    "userId" INTEGER NOT NULL,
+    "postId" UUID NOT NULL,
+    "userId" UUID NOT NULL,
 
     CONSTRAINT "Like_pkey" PRIMARY KEY ("postId","userId")
 );
 
 -- CreateTable
 CREATE TABLE "Comment" (
-    "id" SERIAL NOT NULL,
+    "id" UUID NOT NULL,
     "content" VARCHAR(500) NOT NULL,
-    "postId" INTEGER NOT NULL,
-    "authorId" INTEGER NOT NULL,
+    "postId" UUID NOT NULL,
+    "authorId" UUID NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -54,8 +54,8 @@ CREATE TABLE "Comment" (
 
 -- CreateTable
 CREATE TABLE "Bookmark" (
-    "userId" INTEGER NOT NULL,
-    "postId" INTEGER NOT NULL,
+    "userId" UUID NOT NULL,
+    "postId" UUID NOT NULL,
 
     CONSTRAINT "Bookmark_pkey" PRIMARY KEY ("userId","postId")
 );

@@ -9,7 +9,7 @@ export type MyContext = {
   req: Request;
   res: Response;
   prisma: PrismaClient;
-  userId?: number;
+  userId?: string;
 };
 
 export const context = ({ req, res }: { req: Request; res: Response }) => ({

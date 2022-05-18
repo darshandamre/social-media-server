@@ -26,7 +26,7 @@ class LoginInput {
 
 declare module "jsonwebtoken" {
   interface JwtPayload {
-    id: number;
+    id: string;
   }
 }
 
