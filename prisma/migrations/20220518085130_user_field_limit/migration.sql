@@ -1,13 +1,12 @@
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "username" VARCHAR(50) NOT NULL,
+    "username" VARCHAR(15) NOT NULL,
     "email" TEXT NOT NULL,
-    "firstName" VARCHAR(50),
-    "lastName" VARCHAR(50),
+    "name" VARCHAR(50),
     "password" TEXT NOT NULL,
     "bio" VARCHAR(200),
-    "portfolioLink" TEXT,
+    "portfolioLink" VARCHAR(100),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 

@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { COOKIE_NAME, COOKIE_OPTIONS, JWT_SECRET } from "../constants";
 import { MyContext } from "../context";
-import { validateLogin, validateRegister } from "../user/validate";
+import { validateLogin, validateRegister } from "./validate";
 import { AuthResponse, LoginInput, RegisterInput } from "./types";
 
 @Resolver()
@@ -15,16 +15,16 @@ export class AuthResolver {
     @Ctx() { prisma, res }: MyContext
   ): Promise<AuthResponse> {
     try {
-      const errors = await validateRegister(input);
+      const { castValues, errors } = await validateRegister(input);
       if (errors) {
         return { errors };
       }
 
-      const hashedPassword = await argon2.hash(input.password);
+      const hashedPassword = await argon2.hash(castValues.password);
 
       const user = await prisma.user.create({
         data: {
-          ...input,
+          ...castValues,
           password: hashedPassword
         }
       });
@@ -62,13 +62,13 @@ export class AuthResolver {
     @Arg("input") input: LoginInput,
     @Ctx() { prisma, res }: MyContext
   ): Promise<AuthResponse> {
-    const errors = await validateLogin(input);
+    const { castValues, errors } = await validateLogin(input);
     if (errors) {
       return { errors };
     }
     const user = await prisma.user.findUnique({
       where: {
-        email: input.email
+        email: castValues.email
       }
     });
 
@@ -83,7 +83,7 @@ export class AuthResolver {
       };
     }
 
-    const isValid = await argon2.verify(user.password, input.password);
+    const isValid = await argon2.verify(user.password, castValues.password);
 
     if (!isValid) {
       return {

@@ -13,13 +13,12 @@ datasource db {
 
 model User {
   id            Int        @id @default(autoincrement())
-  username      String     @unique @db.VarChar(50)
+  username      String     @unique @db.VarChar(15)
   email         String     @unique
-  firstName     String?    @db.VarChar(50)
-  lastName      String?    @db.VarChar(50)
+  name          String?    @db.VarChar(50)
   password      String
   bio           String?    @db.VarChar(200)
-  portfolioLink String?
+  portfolioLink String?    @db.VarChar(100)
   posts         Post[]
   followers     Follow[]   @relation("followersOnUser")
   following     Follow[]   @relation("followingOnUser")

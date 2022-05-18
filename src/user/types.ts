@@ -13,10 +13,13 @@ class User {
   email: string;
 
   @Field(() => String, { nullable: true })
-  firstName: string | null;
+  name: string | null;
 
   @Field(() => String, { nullable: true })
-  lastName: string | null;
+  bio: string | null;
+
+  @Field(() => String, { nullable: true })
+  portfolioLink: string | null;
 
   @Field(() => [Post], { nullable: true })
   posts?: Post[];
@@ -33,5 +36,8 @@ class User {
   @Field(() => String)
   updatedAt: Date;
 }
+
+@InputType()
+class EditUserInput {}
 
 export { User };
