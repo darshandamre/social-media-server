@@ -2,7 +2,6 @@ import jwt from "jsonwebtoken";
 import {
   Arg,
   Ctx,
-  Int,
   Mutation,
   Query,
   Resolver,
@@ -50,7 +49,7 @@ export class UserResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async follow(
-    @Arg("followId", () => Int) followId: string,
+    @Arg("followId") followId: string,
     @Ctx() { userId, prisma }: MyContext
   ): Promise<boolean> {
     await prisma.follow.create({
@@ -63,7 +62,7 @@ export class UserResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async unfollow(
-    @Arg("unfollowId", () => Int) unfollowId: string,
+    @Arg("unfollowId") unfollowId: string,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<boolean> {
     await prisma.follow.delete({

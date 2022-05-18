@@ -1,7 +1,6 @@
 import {
   Arg,
   Ctx,
-  Int,
   Mutation,
   Query,
   Resolver,
@@ -15,7 +14,7 @@ import { Post } from "./types";
 export class PostResolver {
   @Query(() => Post, { nullable: true })
   async post(
-    @Arg("id", () => Int) id: string,
+    @Arg("id") id: string,
     @Ctx() { prisma }: MyContext
   ): Promise<Post | null> {
     return prisma.post.findUnique({
@@ -45,7 +44,7 @@ export class PostResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async deletePost(
-    @Arg("id", () => Int) id: string,
+    @Arg("id") id: string,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<boolean> {
     const { count } = await prisma.post.deleteMany({
@@ -61,7 +60,7 @@ export class PostResolver {
   @Mutation(() => Post, { nullable: true })
   @UseMiddleware(isAuth)
   async editPost(
-    @Arg("id", () => Int) id: string,
+    @Arg("id") id: string,
     @Arg("content") content: string,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<Post | null> {
@@ -81,7 +80,7 @@ export class PostResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async like(
-    @Arg("id", () => Int) id: string,
+    @Arg("id") id: string,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<boolean> {
     await prisma.like.create({
@@ -93,7 +92,7 @@ export class PostResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async dislike(
-    @Arg("id", () => Int) id: string,
+    @Arg("id") id: string,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<boolean> {
     await prisma.like.delete({
@@ -105,7 +104,7 @@ export class PostResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async addBookmark(
-    @Arg("id", () => Int) id: string,
+    @Arg("id") id: string,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<boolean> {
     await prisma.bookmark.create({
@@ -117,7 +116,7 @@ export class PostResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async removeBookmark(
-    @Arg("id", () => Int) id: string,
+    @Arg("id") id: string,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<boolean> {
     await prisma.bookmark.delete({
