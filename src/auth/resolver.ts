@@ -5,15 +5,16 @@ import { Arg, Ctx, Mutation, Resolver } from "type-graphql";
 import { COOKIE_NAME, COOKIE_OPTIONS, JWT_SECRET } from "../constants";
 import { MyContext } from "../context";
 import { validateLogin, validateRegister } from "./validate";
-import { AuthResponse, LoginInput, RegisterInput } from "./types";
+import { LoginInput, RegisterInput } from "./types";
+import { UserResponse } from "../common/types";
 
 @Resolver()
 export class AuthResolver {
-  @Mutation(() => AuthResponse)
+  @Mutation(() => UserResponse)
   async register(
     @Arg("input") input: RegisterInput,
     @Ctx() { prisma, res }: MyContext
-  ): Promise<AuthResponse> {
+  ): Promise<UserResponse> {
     try {
       const { castValues, errors } = await validateRegister(input);
       if (errors) {
@@ -57,11 +58,11 @@ export class AuthResolver {
     }
   }
 
-  @Mutation(() => AuthResponse)
+  @Mutation(() => UserResponse)
   async login(
     @Arg("input") input: LoginInput,
     @Ctx() { prisma, res }: MyContext
-  ): Promise<AuthResponse> {
+  ): Promise<UserResponse> {
     const { castValues, errors } = await validateLogin(input);
     if (errors) {
       return { errors };

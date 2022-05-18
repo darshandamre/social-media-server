@@ -38,6 +38,15 @@ class User {
 }
 
 @InputType()
-class EditUserInput {}
+class EditUserInput {
+  @Field({ nullable: true })
+  name?: string;
 
-export { User };
+  @Field({ nullable: true })
+  bio?: string;
+
+  @Field({ nullable: true })
+  portfolioLink?: string;
+}
+
+export { User, EditUserInput };

@@ -1,5 +1,4 @@
-import { Field, InputType, ObjectType } from "type-graphql";
-import { User } from "../user/types";
+import { Field, InputType } from "type-graphql";
 
 @InputType()
 class RegisterInput {
@@ -25,28 +24,10 @@ class LoginInput {
   password: string;
 }
 
-@ObjectType()
-class FieldError {
-  @Field()
-  field: string;
-
-  @Field()
-  message: string;
-}
-
-@ObjectType()
-class AuthResponse {
-  @Field(() => [FieldError], { nullable: true })
-  errors?: FieldError[];
-
-  @Field(() => User, { nullable: true })
-  user?: User;
-}
-
 declare module "jsonwebtoken" {
   interface JwtPayload {
     id: number;
   }
 }
 
-export { RegisterInput, LoginInput, AuthResponse };
+export { RegisterInput, LoginInput };
