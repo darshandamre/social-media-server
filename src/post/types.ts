@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, Int, ObjectType } from "type-graphql";
 import { User } from "../user/types";
 
 @ObjectType()
@@ -17,6 +17,9 @@ export class Post {
 
   @Field(() => [User], { nullable: true })
   likedBy?: User[];
+
+  @Field(() => Int)
+  likes?: number;
 
   @Field()
   isLikedByMe?: boolean;

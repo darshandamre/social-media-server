@@ -55,22 +55,35 @@ export class PostResolver {
     @Arg("id") id: string,
     @Ctx() { prisma }: MyContext
   ): Promise<Post | null> {
-    return prisma.post.findUnique({
+    const post = await prisma.post.findUnique({
       where: { id },
       include: {
-        author: true
+        author: true,
+        _count: {
+          select: {
+            likedBy: true
+          }
+        }
       }
     });
+    if (!post) return null;
+    return { ...post, likes: post?._count.likedBy };
   }
 
   @Query(() => [Post])
   async posts(@Ctx() { prisma }: MyContext): Promise<Post[]> {
-    return prisma.post.findMany({
+    const posts = await prisma.post.findMany({
       include: {
-        author: true
+        author: true,
+        _count: {
+          select: {
+            likedBy: true
+          }
+        }
       },
       take: 30
     });
+    return posts.map(post => ({ ...post, likes: post._count.likedBy }));
   }
 
   @Mutation(() => Post)
@@ -179,7 +192,15 @@ export class PostResolver {
       include: {
         user: {
           include: {
-            posts: true
+            posts: {
+              include: {
+                _count: {
+                  select: {
+                    likedBy: true
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -188,7 +209,11 @@ export class PostResolver {
     return follows.reduce<Post[]>(
       (allPosts, { user: { posts, ...user } }) => [
         ...allPosts,
-        ...posts.map(post => ({ ...post, author: user }))
+        ...posts.map(post => ({
+          ...post,
+          likes: post._count.likedBy,
+          author: user
+        }))
       ],
       []
     );
