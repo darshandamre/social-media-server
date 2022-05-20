@@ -18,13 +18,21 @@ export class PostResolver {
     @Ctx() { prisma }: MyContext
   ): Promise<Post | null> {
     return prisma.post.findUnique({
-      where: { id }
+      where: { id },
+      include: {
+        author: true
+      }
     });
   }
 
   @Query(() => [Post])
   async posts(@Ctx() { prisma }: MyContext): Promise<Post[]> {
-    return prisma.post.findMany();
+    return prisma.post.findMany({
+      include: {
+        author: true
+      },
+      take: 30
+    });
   }
 
   @Mutation(() => Post)
