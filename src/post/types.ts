@@ -18,6 +18,12 @@ export class Post {
   @Field(() => [User], { nullable: true })
   likedBy?: User[];
 
+  @Field()
+  isLikedByMe?: boolean;
+
+  @Field()
+  isBookmarkedByMe?: boolean;
+
   // comments     Comment[]
 
   @Field(() => String)

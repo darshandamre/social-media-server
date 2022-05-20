@@ -1,9 +1,11 @@
 import {
   Arg,
   Ctx,
+  FieldResolver,
   Mutation,
   Query,
   Resolver,
+  Root,
   UseMiddleware
 } from "type-graphql";
 import { isAuth } from "../auth/middlewares";
@@ -12,6 +14,42 @@ import { Post } from "./types";
 
 @Resolver(Post)
 export class PostResolver {
+  @FieldResolver(() => Boolean)
+  @UseMiddleware(isAuth)
+  async isLikedByMe(
+    @Root() post: Post,
+    @Ctx() { prisma, userId }: MyContext
+  ): Promise<boolean> {
+    const like = await prisma.like.findUnique({
+      where: {
+        postId_userId: {
+          postId: post.id,
+          userId: userId!
+        }
+      }
+    });
+
+    return !!like;
+  }
+
+  @FieldResolver(() => Boolean)
+  @UseMiddleware(isAuth)
+  async isBookmarkedByMe(
+    @Root() post: Post,
+    @Ctx() { prisma, userId }: MyContext
+  ): Promise<boolean> {
+    const bookmark = await prisma.bookmark.findUnique({
+      where: {
+        userId_postId: {
+          userId: userId!,
+          postId: post.id
+        }
+      }
+    });
+
+    return !!bookmark;
+  }
+
   @Query(() => Post, { nullable: true })
   async post(
     @Arg("id") id: string,
