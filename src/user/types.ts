@@ -1,4 +1,4 @@
-import { Field, ID, InputType, ObjectType } from "type-graphql";
+import { Field, ID, InputType, Int, ObjectType } from "type-graphql";
 import { Post } from "../post/types";
 
 @ObjectType()
@@ -27,8 +27,14 @@ class User {
   @Field(() => [User], { nullable: true })
   followers?: User[];
 
+  @Field(() => Int, { nullable: true })
+  numFollowers?: number;
+
   @Field(() => [User], { nullable: true })
   following?: User[];
+
+  @Field(() => Int, { nullable: true })
+  numFollowing?: number;
 
   @Field(() => [Post], { nullable: true })
   likes?: Post[];

@@ -33,6 +33,42 @@ export class UserResolver {
     return await prisma.user.findUnique({ where: { id } });
   }
 
+  @Query(() => User, { nullable: true })
+  async user(
+    @Arg("username") username: string,
+    @Ctx() { prisma }: MyContext
+  ): Promise<User | null> {
+    const user = await prisma.user.findUnique({
+      where: { username },
+      include: {
+        posts: {
+          include: {
+            _count: {
+              select: {
+                likedBy: true
+              }
+            }
+          }
+        },
+        _count: {
+          select: {
+            followers: true,
+            following: true
+          }
+        }
+      }
+    });
+
+    if (!user) return null;
+
+    return {
+      ...user,
+      numFollowers: user?._count.followers,
+      numFollowing: user?._count.following,
+      posts: user.posts.map(post => ({ ...post, likes: post._count.likedBy }))
+    };
+  }
+
   @Mutation(() => UserResponse)
   @UseMiddleware(isAuth)
   async editUser(
