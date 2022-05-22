@@ -2,9 +2,11 @@ import jwt from "jsonwebtoken";
 import {
   Arg,
   Ctx,
+  FieldResolver,
   Mutation,
   Query,
   Resolver,
+  Root,
   UseMiddleware
 } from "type-graphql";
 import { isAuth } from "../auth/middlewares";
@@ -16,6 +18,11 @@ import { validateUserEdit } from "./validate";
 
 @Resolver(User)
 export class UserResolver {
+  @FieldResolver(() => String)
+  email(@Root() user: User, @Ctx() { userId }: MyContext) {
+    return userId === user.id ? user.email : "";
+  }
+
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req, prisma }: MyContext): Promise<User | null> {
     const token = req.cookies[COOKIE_NAME];

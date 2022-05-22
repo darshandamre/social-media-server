@@ -218,4 +218,46 @@ export class PostResolver {
       []
     );
   }
+
+  @Query(() => [Post], { nullable: true })
+  @UseMiddleware(isAuth)
+  async likedPosts(
+    @Ctx() { prisma, userId }: MyContext
+  ): Promise<Post[] | undefined> {
+    const user = await prisma.user.findUnique({
+      select: {
+        likes: {
+          select: {
+            post: {
+              include: { author: true }
+            }
+          }
+        }
+      },
+      where: { id: userId }
+    });
+
+    return user?.likes.map(like => like.post);
+  }
+
+  @Query(() => [Post], { nullable: true })
+  @UseMiddleware(isAuth)
+  async bookmarkedPosts(
+    @Ctx() { prisma, userId }: MyContext
+  ): Promise<Post[] | undefined> {
+    const user = await prisma.user.findUnique({
+      select: {
+        bookmarks: {
+          select: {
+            post: {
+              include: { author: true }
+            }
+          }
+        }
+      },
+      where: { id: userId }
+    });
+
+    return user?.bookmarks.map(bookmark => bookmark.post);
+  }
 }
