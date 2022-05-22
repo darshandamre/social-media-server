@@ -229,7 +229,14 @@ export class PostResolver {
         likes: {
           select: {
             post: {
-              include: { author: true }
+              include: {
+                author: true,
+                _count: {
+                  select: {
+                    likedBy: true
+                  }
+                }
+              }
             }
           }
         }
@@ -237,7 +244,10 @@ export class PostResolver {
       where: { id: userId }
     });
 
-    return user?.likes.map(like => like.post);
+    return user?.likes.map(({ post }) => ({
+      ...post,
+      likes: post._count.likedBy
+    }));
   }
 
   @Query(() => [Post], { nullable: true })
@@ -250,7 +260,14 @@ export class PostResolver {
         bookmarks: {
           select: {
             post: {
-              include: { author: true }
+              include: {
+                author: true,
+                _count: {
+                  select: {
+                    likedBy: true
+                  }
+                }
+              }
             }
           }
         }
@@ -258,6 +275,9 @@ export class PostResolver {
       where: { id: userId }
     });
 
-    return user?.bookmarks.map(bookmark => bookmark.post);
+    return user?.bookmarks.map(({ post }) => ({
+      ...post,
+      likes: post._count.likedBy
+    }));
   }
 }
