@@ -48,7 +48,11 @@ export class UserResolver {
                 likedBy: true
               }
             }
-          }
+          },
+          orderBy: {
+            createdAt: "desc"
+          },
+          take: 30
         },
         _count: {
           select: {
