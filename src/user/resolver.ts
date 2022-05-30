@@ -23,6 +23,42 @@ export class UserResolver {
     return userId === user.id ? user.email : "";
   }
 
+  @FieldResolver(() => Boolean)
+  @UseMiddleware(isAuth)
+  async amIFollowingThem(
+    @Root() user: User,
+    @Ctx() { prisma, userId: loggedInUserId }: MyContext
+  ): Promise<boolean> {
+    if (loggedInUserId === user.id) return false;
+
+    return !!(await prisma.follow.findUnique({
+      where: {
+        userId_followerId: {
+          userId: user.id,
+          followerId: loggedInUserId!
+        }
+      }
+    }));
+  }
+
+  @FieldResolver(() => Boolean)
+  @UseMiddleware(isAuth)
+  async isMyFollower(
+    @Root() user: User,
+    @Ctx() { prisma, userId: loggedInUserId }: MyContext
+  ): Promise<boolean> {
+    if (loggedInUserId === user.id) return false;
+
+    return !!(await prisma.follow.findUnique({
+      where: {
+        userId_followerId: {
+          userId: loggedInUserId!,
+          followerId: user.id
+        }
+      }
+    }));
+  }
+
   @Query(() => User, { nullable: true })
   async me(@Ctx() { req, prisma }: MyContext): Promise<User | null> {
     const token = req.cookies[COOKIE_NAME];
@@ -52,7 +88,7 @@ export class UserResolver {
           orderBy: {
             createdAt: "desc"
           },
-          take: 30
+          take: 20
         },
         _count: {
           select: {

@@ -1,16 +1,18 @@
 import "reflect-metadata";
-import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
+import express, { Request, Response } from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import http from "http";
 import { buildSchema } from "type-graphql";
 import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginDrainHttpServer } from "apollo-server-core";
-import { context } from "./context";
 import { HelloResolver } from "./hello/resolver";
 import { UserResolver } from "./user/resolver";
 import { AuthResolver } from "./auth/resolver";
 import { PostResolver } from "./post/resolver";
+import { PrismaClient } from "@prisma/client";
 
 const main = async () => {
   const app = express();
@@ -33,9 +35,40 @@ const main = async () => {
     resolvers: [HelloResolver, AuthResolver, UserResolver, PostResolver]
   });
 
+  const prisma = new PrismaClient({
+    log: [
+      {
+        emit: "event",
+        level: "query"
+      },
+      {
+        emit: "stdout",
+        level: "error"
+      },
+      {
+        emit: "stdout",
+        level: "info"
+      },
+      {
+        emit: "stdout",
+        level: "warn"
+      }
+    ]
+  });
+
+  prisma.$on("query", e => {
+    console.log("Query: " + e.query);
+    // console.log("Params: " + e.params);
+    console.log("Duration: " + e.duration + "ms");
+  });
+
   const server = new ApolloServer({
     schema,
-    context,
+    context: ({ req, res }: { req: Request; res: Response }) => ({
+      req,
+      res,
+      prisma
+    }),
     csrfPrevention: true,
     plugins: [ApolloServerPluginDrainHttpServer({ httpServer })]
   });

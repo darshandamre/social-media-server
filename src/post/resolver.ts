@@ -81,7 +81,7 @@ export class PostResolver {
           }
         }
       },
-      take: 30
+      take: 20
     });
     return posts.map(post => ({ ...post, likes: post._count.likedBy }));
   }
@@ -203,7 +203,8 @@ export class PostResolver {
             }
           }
         }
-      }
+      },
+      take: 20
     });
 
     return follows.reduce<Post[]>(
