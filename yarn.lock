@@ -1284,6 +1284,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dotenv@npm:^16.0.1":
+  version: 16.0.1
+  resolution: "dotenv@npm:16.0.1"
+  checksum: f459ffce07b977b7f15d8cc4ee69cdff77d4dd8c5dc8c85d2d485ee84655352c2415f9dd09d42b5b5985ced3be186130871b34e2f3e2569ebc72fbc2e8096792
+  languageName: node
+  linkType: hard
+
 "duplexer3@npm:^0.1.4":
   version: 0.1.4
   resolution: "duplexer3@npm:0.1.4"
@@ -2925,6 +2932,7 @@ __metadata:
     class-validator: ^0.13.2
     cookie-parser: ^1.4.6
     cors: ^2.8.5
+    dotenv: ^16.0.1
     express: ^4.18.1
     graphql: ^15
     jsonwebtoken: ^8.5.1
