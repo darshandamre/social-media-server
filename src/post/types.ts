@@ -1,4 +1,5 @@
 import { Field, ID, Int, ObjectType } from "type-graphql";
+import { Comment } from "../comment/types";
 import { User } from "../user/types";
 
 @ObjectType()
@@ -27,7 +28,8 @@ export class Post {
   @Field()
   isBookmarkedByMe?: boolean;
 
-  // comments     Comment[]
+  @Field(() => Comment, { nullable: true })
+  comments?: Comment[];
 
   @Field(() => String)
   createdAt: Date;

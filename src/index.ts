@@ -13,18 +13,14 @@ import { UserResolver } from "./user/resolver";
 import { AuthResolver } from "./auth/resolver";
 import { PostResolver } from "./post/resolver";
 import { PrismaClient } from "@prisma/client";
+import { CommentResolver } from "./comment/resolver";
 
 const main = async () => {
   const app = express();
 
   app.use(
     cors({
-      origin: [
-        "http://localhost:3000",
-        "https://studio.apollographql.com",
-        process.env.UI!,
-        process.env.UI_PREVIEW!
-      ],
+      origin: [process.env.UI!, process.env.UI_PREVIEW!],
       credentials: true
     })
   );
@@ -32,7 +28,13 @@ const main = async () => {
 
   const httpServer = http.createServer(app);
   const schema = await buildSchema({
-    resolvers: [HelloResolver, AuthResolver, UserResolver, PostResolver]
+    resolvers: [
+      HelloResolver,
+      AuthResolver,
+      UserResolver,
+      PostResolver,
+      CommentResolver
+    ]
   });
 
   const prisma = new PrismaClient({

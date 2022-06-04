@@ -13,8 +13,9 @@ export class AuthResolver {
   @Mutation(() => UserResponse)
   async register(
     @Arg("input") input: RegisterInput,
-    @Ctx() { prisma, res }: MyContext
+    @Ctx() context: MyContext
   ): Promise<UserResponse> {
+    const { prisma, res } = context;
     try {
       const { castValues, errors } = await validateRegister(input);
       if (errors) {
@@ -31,9 +32,9 @@ export class AuthResolver {
       });
 
       const token = jwt.sign({ id: user.id }, JWT_SECRET);
-
       res.cookie(COOKIE_NAME, token, COOKIE_OPTIONS);
 
+      context.userId = user.id;
       return { user };
     } catch (err) {
       if (
@@ -61,8 +62,10 @@ export class AuthResolver {
   @Mutation(() => UserResponse)
   async login(
     @Arg("input") input: LoginInput,
-    @Ctx() { prisma, res }: MyContext
+    @Ctx() context: MyContext
   ): Promise<UserResponse> {
+    const { prisma, res } = context;
+
     const { castValues, errors } = await validateLogin(input);
     if (errors) {
       return { errors };
@@ -100,6 +103,7 @@ export class AuthResolver {
     const token = jwt.sign({ id: user.id }, JWT_SECRET);
     res.cookie(COOKIE_NAME, token, COOKIE_OPTIONS);
 
+    context.userId = user.id;
     return { user };
   }
 

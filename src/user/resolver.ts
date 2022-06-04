@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import {
   Arg,
   Ctx,
@@ -11,7 +10,6 @@ import {
 } from "type-graphql";
 import { isAuth } from "../auth/middlewares";
 import { UserResponse } from "../common/types";
-import { COOKIE_NAME, JWT_SECRET } from "../constants";
 import { MyContext } from "../context";
 import { EditUserInput, User } from "./types";
 import { validateUserEdit } from "./validate";
@@ -60,13 +58,9 @@ export class UserResolver {
   }
 
   @Query(() => User, { nullable: true })
-  async me(@Ctx() { req, prisma }: MyContext): Promise<User | null> {
-    const token = req.cookies[COOKIE_NAME];
-    if (!token) return null;
-
-    const { id } = jwt.verify(token, JWT_SECRET) as jwt.JwtPayload;
-
-    return await prisma.user.findUnique({ where: { id } });
+  @UseMiddleware(isAuth)
+  async me(@Ctx() { userId, prisma }: MyContext): Promise<User | null> {
+    return await prisma.user.findUnique({ where: { id: userId } });
   }
 
   @Query(() => User, { nullable: true })
