@@ -6,5 +6,6 @@ export const COOKIE_OPTIONS: CookieOptions = {
   httpOnly: true,
   sameSite: "none",
   maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-  secure: true
+  secure: true,
+  domain: process.env.UI_DOMAIN
 };
