@@ -18,6 +18,7 @@ import { CommentResolver } from "./comment/resolver";
 const main = async () => {
   const app = express();
 
+  app.set("trust proxy", 1);
   app.use(
     cors({
       origin: [process.env.UI!, process.env.UI_PREVIEW!],
