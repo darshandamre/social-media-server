@@ -99,7 +99,16 @@ export class UserResolver {
       ...user,
       numFollowers: user?._count.followers,
       numFollowing: user?._count.following,
-      posts: user.posts.map(post => ({ ...post, likes: post._count.likedBy }))
+      posts: user.posts.map(post => ({
+        ...post,
+        likes: post._count.likedBy,
+        author: {
+          id: user.id,
+          name: user.name,
+          username: user.username,
+          email: user.email
+        }
+      }))
     };
   }
 

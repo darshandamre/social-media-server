@@ -13,13 +13,13 @@ class User {
   email: string;
 
   @Field(() => String, { nullable: true })
-  name: string | null;
+  name?: string | null;
 
   @Field(() => String, { nullable: true })
-  bio: string | null;
+  bio?: string | null;
 
   @Field(() => String, { nullable: true })
-  portfolioLink: string | null;
+  portfolioLink?: string | null;
 
   @Field(() => [Post], { nullable: true })
   posts?: Post[];
@@ -42,11 +42,11 @@ class User {
   @Field(() => [Post], { nullable: true })
   bookmarks?: Post[];
 
-  @Field(() => String)
-  createdAt: Date;
+  @Field(() => String, { nullable: true })
+  createdAt?: Date;
 
-  @Field(() => String)
-  updatedAt: Date;
+  @Field(() => String, { nullable: true })
+  updatedAt?: Date;
 }
 
 @InputType()
