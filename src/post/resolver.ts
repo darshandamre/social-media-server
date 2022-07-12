@@ -10,6 +10,7 @@ import {
 } from "type-graphql";
 import { isAuth } from "../auth/middlewares";
 import { MyContext } from "../context";
+import { nanoid } from "../utils/nanoid";
 import { Post } from "./types";
 
 @Resolver(Post)
@@ -93,8 +94,10 @@ export class PostResolver {
     @Ctx() { userId, prisma }: MyContext
   ): Promise<Post> {
     // TODO: add nanoid here
+    const publicId = nanoid();
     return prisma.post.create({
       data: {
+        publicId,
         content,
         authorId: userId!
       }
