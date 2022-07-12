@@ -5,19 +5,19 @@ import { User } from "../user/types";
 @ObjectType()
 export class Comment {
   @Field(() => ID)
-  id: string;
+  id: number;
 
   @Field()
   content: string;
 
   @Field(() => ID)
-  postId: String;
+  postId: number;
 
   @Field(() => Post, { nullable: true })
   post?: Post;
 
   @Field(() => ID)
-  authorId: string;
+  authorId: number;
 
   @Field(() => User, { nullable: true })
   author?: User;

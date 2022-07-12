@@ -5,5 +5,5 @@ export type MyContext = {
   req: Request;
   res: Response;
   prisma: PrismaClient;
-  userId?: string;
+  userId?: number;
 };

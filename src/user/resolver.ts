@@ -135,7 +135,7 @@ export class UserResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async follow(
-    @Arg("followId") followId: string,
+    @Arg("followId") followId: number,
     @Ctx() { userId, prisma }: MyContext
   ): Promise<boolean> {
     await prisma.follow.create({
@@ -148,7 +148,7 @@ export class UserResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async unfollow(
-    @Arg("unfollowId") unfollowId: string,
+    @Arg("unfollowId") unfollowId: number,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<boolean> {
     await prisma.follow.delete({

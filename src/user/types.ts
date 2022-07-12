@@ -4,7 +4,7 @@ import { Post } from "../post/types";
 @ObjectType()
 class User {
   @Field(() => ID)
-  id: string;
+  id: number;
 
   @Field()
   username: string;

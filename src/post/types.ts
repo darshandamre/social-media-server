@@ -5,7 +5,7 @@ import { User } from "../user/types";
 @ObjectType()
 export class Post {
   @Field(() => ID)
-  id: string;
+  id: number;
 
   @Field()
   content: string;
@@ -14,7 +14,7 @@ export class Post {
   author?: User;
 
   @Field(() => ID)
-  authorId: string;
+  authorId: number;
 
   @Field(() => [User], { nullable: true })
   likedBy?: User[];
