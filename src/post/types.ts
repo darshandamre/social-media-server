@@ -1,10 +1,10 @@
-import { Field, ID, Int, ObjectType } from "type-graphql";
+import { Field, Int, ObjectType } from "type-graphql";
 import { Comment } from "../comment/types";
 import { User } from "../user/types";
 
 @ObjectType()
 export class Post {
-  @Field(() => ID)
+  @Field()
   id: number;
 
   @Field()
@@ -13,7 +13,7 @@ export class Post {
   @Field(() => User, { nullable: true })
   author?: User;
 
-  @Field(() => ID)
+  @Field()
   authorId: number;
 
   @Field(() => [User], { nullable: true })

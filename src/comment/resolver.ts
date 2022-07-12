@@ -1,6 +1,7 @@
 import {
   Arg,
   Ctx,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -14,7 +15,7 @@ import { Comment } from "./types";
 export class CommentResolver {
   @Query(() => [Comment])
   async comments(
-    @Arg("postId") postId: number,
+    @Arg("postId", () => Int) postId: number,
     @Ctx() { prisma }: MyContext
   ): Promise<Comment[]> {
     return await prisma.comment.findMany({
@@ -26,7 +27,7 @@ export class CommentResolver {
   @Mutation(() => Comment)
   @UseMiddleware(isAuth)
   async createComment(
-    @Arg("postId") postId: number,
+    @Arg("postId", () => Int) postId: number,
     @Arg("content") content: string,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<Comment> {
@@ -38,7 +39,7 @@ export class CommentResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async deleteComment(
-    @Arg("id") id: number,
+    @Arg("id", () => Int) id: number,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<boolean> {
     const { count } = await prisma.comment.deleteMany({
@@ -54,7 +55,7 @@ export class CommentResolver {
   @Mutation(() => Comment, { nullable: true })
   @UseMiddleware(isAuth)
   async editComment(
-    @Arg("id") id: number,
+    @Arg("id", () => Int) id: number,
     @Arg("content") content: string,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<Comment | null> {

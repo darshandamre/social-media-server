@@ -2,6 +2,7 @@ import {
   Arg,
   Ctx,
   FieldResolver,
+  Int,
   Mutation,
   Query,
   Resolver,
@@ -135,7 +136,7 @@ export class UserResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async follow(
-    @Arg("followId") followId: number,
+    @Arg("followId", () => Int) followId: number,
     @Ctx() { userId, prisma }: MyContext
   ): Promise<boolean> {
     await prisma.follow.create({
@@ -148,7 +149,7 @@ export class UserResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(isAuth)
   async unfollow(
-    @Arg("unfollowId") unfollowId: number,
+    @Arg("unfollowId", () => Int) unfollowId: number,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<boolean> {
     await prisma.follow.delete({

@@ -1,9 +1,9 @@
-import { Field, ID, InputType, Int, ObjectType } from "type-graphql";
+import { Field, InputType, Int, ObjectType } from "type-graphql";
 import { Post } from "../post/types";
 
 @ObjectType()
 class User {
-  @Field(() => ID)
+  @Field()
   id: number;
 
   @Field()
