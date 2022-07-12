@@ -8,6 +8,9 @@ export class Post {
   id: number;
 
   @Field()
+  publicId: string;
+
+  @Field()
   content: string;
 
   @Field(() => User, { nullable: true })

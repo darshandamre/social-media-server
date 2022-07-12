@@ -54,11 +54,11 @@ export class PostResolver {
 
   @Query(() => Post, { nullable: true })
   async post(
-    @Arg("id", () => Int) id: number,
+    @Arg("id") publicId: string,
     @Ctx() { prisma }: MyContext
   ): Promise<Post | null> {
     const post = await prisma.post.findUnique({
-      where: { id },
+      where: { publicId },
       include: {
         author: true,
         _count: {
@@ -94,7 +94,6 @@ export class PostResolver {
     @Arg("content") content: string,
     @Ctx() { userId, prisma }: MyContext
   ): Promise<Post> {
-    // TODO: add nanoid here
     const publicId = nanoid();
     return prisma.post.create({
       data: {
