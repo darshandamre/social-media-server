@@ -28,13 +28,13 @@ export class UserResolver {
     @Root() user: User,
     @Ctx() { prisma, userId: loggedInUserId }: MyContext
   ): Promise<boolean> {
-    if (loggedInUserId === user.id) return false;
+    if (!loggedInUserId || loggedInUserId === user.id) return false;
 
     return !!(await prisma.follow.findUnique({
       where: {
         userId_followerId: {
           userId: user.id,
-          followerId: loggedInUserId!
+          followerId: loggedInUserId
         }
       }
     }));
@@ -46,12 +46,12 @@ export class UserResolver {
     @Root() user: User,
     @Ctx() { prisma, userId: loggedInUserId }: MyContext
   ): Promise<boolean> {
-    if (loggedInUserId === user.id) return false;
+    if (!loggedInUserId || loggedInUserId === user.id) return false;
 
     return !!(await prisma.follow.findUnique({
       where: {
         userId_followerId: {
-          userId: loggedInUserId!,
+          userId: loggedInUserId,
           followerId: user.id
         }
       }

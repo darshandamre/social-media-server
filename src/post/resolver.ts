@@ -22,11 +22,12 @@ export class PostResolver {
     @Root() post: Post,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<boolean> {
+    if (!userId) return false;
     const like = await prisma.like.findUnique({
       where: {
         postId_userId: {
           postId: post.id,
-          userId: userId!
+          userId
         }
       }
     });
@@ -40,10 +41,11 @@ export class PostResolver {
     @Root() post: Post,
     @Ctx() { prisma, userId }: MyContext
   ): Promise<boolean> {
+    if (!userId) return false;
     const bookmark = await prisma.bookmark.findUnique({
       where: {
         userId_postId: {
-          userId: userId!,
+          userId,
           postId: post.id
         }
       }
