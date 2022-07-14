@@ -59,11 +59,11 @@ const main = async () => {
     ]
   });
 
-  prisma.$on("query", e => {
-    console.log("Query: " + e.query);
-    // console.log("Params: " + e.params);
-    console.log("Duration: " + e.duration + "ms");
-  });
+  // prisma.$on("query", e => {
+  //   console.log("Query: " + e.query);
+  //   // console.log("Params: " + e.params);
+  //   console.log("Duration: " + e.duration + "ms");
+  // });
 
   const server = new ApolloServer({
     schema,
