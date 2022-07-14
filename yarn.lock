@@ -2534,7 +2534,7 @@ __metadata:
     reflect-metadata: ^0.1.13
     ts-node: ^10.7.0
     type-graphql: ^1.1.1
-    typescript: ^4.6.4
+    typescript: ^4.7.4
     yup: ^0.32.11
   languageName: unknown
   linkType: soft
@@ -2803,7 +2803,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.6.4":
+"typescript@npm:^4.7.4":
   version: 4.7.4
   resolution: "typescript@npm:4.7.4"
   bin:
@@ -2813,7 +2813,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.6.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@^4.7.4#~builtin<compat/typescript>":
   version: 4.7.4
   resolution: "typescript@patch:typescript@npm%3A4.7.4#~builtin<compat/typescript>::version=4.7.4&hash=bda367"
   bin:
